@@ -1,0 +1,13 @@
+/*
+** Created by glastis
+** Date: 15-Nov-20
+** Contact: developers@glastis.com
+*/
+
+#ifndef ESP_RELAIS_WIFI_WIFI_PASS_H
+#define ESP_RELAIS_WIFI_WIFI_PASS_H
+
+static const char *WIFI_SSID =              "Wifi name";
+static const char *WIFI_PASS =              "Wifi password";
+
+#endif //ESP_RELAIS_WIFI_WIFI_PASS_H
