@@ -11,10 +11,6 @@ project(${PROJECT_NAME})
 include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/libraries/ESP8266WiFi/src")
 include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/cores/esp8266")
 
-# Define additional source and header files or default arduino sketch files
-# set(${PROJECT_NAME}_SRCS)
-# set(${PROJECT_NAME}_HDRS "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/libraries/ESP8266WiFi/src")
-
 ### Additional static libraries to include in the target.
 set(${PROJECT_NAME}_LIBS "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/libraries/ESP8266WiFi")
 
@@ -22,7 +18,12 @@ add_executable(${PROJECT_NAME}2
         esp_relais_wifi.ino         main.h
         wifi.cpp                    wifi.h
         router.cpp                  router.h
-        request.cpp                 request.h wifi_pass.h)
+        request.cpp                 request.h
+        relay.cpp                   relay.h
+
+        wifi_pass.h
+        constants.h
+        )
 
 
 ### Main sketch file
