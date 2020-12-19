@@ -2,10 +2,10 @@
 ** Created by Glastis on 03/02/19.
 */
 
-#include <Arduino.h>
 #include <ESP8266WiFi.h>
 
 #include "wifi.h"
+#include "wifi_pass.h"
 
 void                                        wifi_check()
 {

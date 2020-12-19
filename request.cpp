@@ -4,11 +4,11 @@
 ** Contact: developers@glastis.com
 */
 
-#include <Arduino.h>
 #include <ESP8266WiFi.h>
 
 #include "request.h"
 #include "constants.h"
+#include "utilities.h"
 
 static void                 reply_arr(WiFiClient &client, char **arr)
 {
@@ -58,9 +58,9 @@ static void                 reply_html_content_header(WiFiClient &client)
 
 static void                 reply_html_content_scripts(WiFiClient &client)
 {
-    char                    *arr[] = { "<script src=\"", HTML_EXTERNAL_JS_URL, "\"></script>" };
+    const char              *arr[] = { "<script src=\"", HTML_EXTERNAL_JS_URL, "\"></script>" };
 
-    reply_arr(client, arr);
+    reply_arr(client, (char **)arr);
 }
 
 static void                 reply_headers(WiFiClient &client, const char *type, const char *status)
@@ -69,6 +69,78 @@ static void                 reply_headers(WiFiClient &client, const char *type, 
     client.println(status);
     client.println(type);
     client.println("");
+}
+
+static void                 get_http_param_extract_value(const char *param, char *output)
+{
+    unsigned int            i;
+    unsigned int            o;
+
+    i = 0;
+    while ( param[i] &&
+            param[i] != '=' &&
+            param[i] != '\r' &&
+            param[i] != '\n' &&
+            param[i] != '\t')
+    {
+        ++i;
+    }
+    if (param[i] == '=' && param[i + 1])
+    {
+        ++i;
+        o = 0;
+        while (param[i] && param[i] != '&' && o < REQUEST_HTTP_PARAMS_MAX_SIZE)
+        {
+            output[o] = param[i];
+            ++o;
+            ++i;
+        }
+        return;
+    }
+    output[0] = '1';
+    output[1] = '\0';
+}
+
+int                         get_http_param(const char *params, const char *key, char *value_output)
+{
+    unsigned int            i;
+
+    i = 0;
+    while (params[i])
+    {
+        if (comp_str_beg(key, &params[i]))
+        {
+            get_http_param_extract_value(&params[i], value_output);
+            return TRUE;
+        }
+        ++i;
+    }
+    return FALSE;
+}
+
+void                        get_http_params(char *request, char *params)
+{
+    unsigned int            i;
+    unsigned int            x;
+
+    i = 0;
+    x = 0;
+    params[x] = '\0';
+    while (request[i] && request[i] != '?')
+    {
+        ++i;
+    }
+    if (request[i])
+    {
+        request[i] = '\0';
+        ++i;
+        while (request[i])
+        {
+            params[x] = request[i];
+            ++x;
+            ++i;
+        }
+    }
 }
 
 void                        send_button(WiFiClient &client, const char *href, const char *name)

@@ -8,11 +8,11 @@ set(${PROJECT_NAME}_BOARD leonardo)
 project(${PROJECT_NAME})
 
 
-include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/libraries/ESP8266WiFi/src")
-include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/cores/esp8266")
+include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi/src")
+include_directories(${PROJECT_NAME} PRIVATE "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.4/cores/esp8266")
 
 ### Additional static libraries to include in the target.
-set(${PROJECT_NAME}_LIBS "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.1/libraries/ESP8266WiFi")
+set(${PROJECT_NAME}_LIBS "C:/Users/glastis/AppData/Local/Arduino15/packages/esp8266/hardware/esp8266/2.7.4/libraries/ESP8266WiFi")
 
 add_executable(${PROJECT_NAME}2
         esp_relais_wifi.ino         main.h
@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}2
         router.cpp                  router.h
         request.cpp                 request.h
         relay.cpp                   relay.h
+        utilities.cpp               utilities.h
 
         wifi_pass.h
         constants.h

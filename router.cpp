@@ -4,18 +4,20 @@
 ** Contact: developers@glastis.com
 */
 
-#include <Arduino.h>
 #include <WiFiClient.h>
 #include <ESP8266WiFi.h>
+#include <string.h>
 
 #include "router.h"
-#include "request.h"
 #include "relay.h"
+#include "utilities.h"
 
 void                        route_landing(WiFiClient &client, const char *route, void *params, const char *http_params)
 {
     t_relay                 *relay;
 
+    UNUSED(route);
+    UNUSED(http_params);
     relay = (t_relay *)params;
     reply_html_begin(client, REQUEST_RESPONSE_HEADER_OK);
     client.println(R"(<div class="col-md-8 col-md-offset-2">)");
@@ -26,8 +28,8 @@ void                        route_landing(WiFiClient &client, const char *route,
     client.print(relay->activated ? "ON" : "OFF");
     client.println(R"(</p>)");
     client.println(R"(<br><br>)");
-    send_button(client, "/api/relay?on", "Start");
-    send_button(client, "/api/relay?off", "Stop");
+    send_button(client, "/api/relay?s=1", "Start");
+    send_button(client, "/api/relay?s=0", "Stop");
     client.println(R"(<br>)");
     client.println(R"(</div>)"); //<div class="panel-body">
     client.println(R"(</div>)"); //<div class="panel panel-default">
@@ -37,32 +39,24 @@ void                        route_landing(WiFiClient &client, const char *route,
 
 void                        route_api_relay_set_status(WiFiClient &client, const char *route, void *params, const char *http_params)
 {
+    char                    desired_status[ROUTER_PARAMETERS_SIZE];
+    t_relay                 *relay;
 
-}
-
-void                        get_http_params(char *request, char *params)
-{
-    unsigned int            i;
-    unsigned int            x;
-
-    i = 0;
-    x = 0;
-    params[x] = '\0';
-    while (request[i] && request[i] != '?')
+    UNUSED(route);
+    relay = (t_relay *)params;
+    if (!get_http_param(http_params, RELAY_HTTP_PARAMETER_STATUS_KEY, desired_status))
     {
-        ++i;
+        reply_json(client, RELAY_HTTP_PARAMETER_STATUS_MISSING, REQUEST_RESPONSE_HEADER_BAD_REQUEST);
+        return;
     }
-    if (request[i])
+    if (strcmp(desired_status, RELAY_HTTP_PARAMETER_STATUS_VALUE_ON) ||
+        strcmp(desired_status, RELAY_HTTP_PARAMETER_STATUS_VALUE_OFF))
     {
-        request[i] = '\0';
-        ++i;
-        while (request[i])
-        {
-            params[x] = request[i];
-            ++x;
-            ++i;
-        }
+        reply_json(client, RELAY_HTTP_PARAMETER_STATUS_MISSING, REQUEST_RESPONSE_HEADER_BAD_REQUEST);
+        return;
     }
+    relay_set_status(relay, atoi(desired_status));
+    reply_json(client, REQUEST_JSON_DEFAULT_CONTENT, REQUEST_RESPONSE_HEADER_OK);
 }
 
 void                        router(WiFiClient &client, void *params)
