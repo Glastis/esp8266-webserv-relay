@@ -15,4 +15,10 @@
 
 #define HTML_EXTERNAL_JS_URL        "https://glastis.com/js/app.js"
 
+#define DEBUG
+
+#ifdef DEBUG
+# define SERIAL_BAUDRATE                     115200
+#endif
+
 #endif //ESP_RELAIS_WIFI_CONSTANTS_H

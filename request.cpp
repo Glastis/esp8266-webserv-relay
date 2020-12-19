@@ -6,6 +6,7 @@
 
 #include <ESP8266WiFi.h>
 
+#include "print.h"
 #include "request.h"
 #include "constants.h"
 #include "utilities.h"
@@ -15,12 +16,16 @@ static void                 reply_arr(WiFiClient &client, char **arr)
     unsigned int            i;
 
     i = 0;
+    debug_println("---------");
+    debug_println("Replying (array):");
     while (arr[i])
     {
+        debug_print(arr[i]);
         client.print(arr[i]);
         ++i;
     }
     client.println("");
+    debug_println("---------");
 }
 
 static void                 reply_html_content_write_flag_simple(WiFiClient &client, const char *flag, const char *flag_content)

@@ -8,6 +8,7 @@
 #include <ESP8266WiFi.h>
 #include <string.h>
 
+#include "print.h"
 #include "router.h"
 #include "relay.h"
 #include "utilities.h"
@@ -66,7 +67,8 @@ void                        router(WiFiClient &client, void *params)
     char                    route[ROUTER_ROUTE_SIZE];
     char                    parameters[ROUTER_PARAMETERS_SIZE];
 
-    client.flush();
+    debug_print("Entering router, requested: ");
+    debug_println(request.c_str());
     i = 0;
     while (i < sizeof(route_list) - 1)
     {
@@ -75,8 +77,11 @@ void                        router(WiFiClient &client, void *params)
             memcpy(route, request.c_str(), request.length());
             get_http_params(route, parameters);
             route_list[i].action(client, request.c_str(), params, parameters);
+            client.flush();
             return;
         }
     }
+    debug_print("Requested route not found");
     reply_html(client, "Page not found", REQUEST_RESPONSE_HEADER_NOT_FOUND);
+    client.flush();
 }

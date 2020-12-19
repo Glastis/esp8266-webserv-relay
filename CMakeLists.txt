@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME}2
 
         wifi_pass.h
         constants.h
-        )
+        print.cpp print.h)
 
 
 ### Main sketch file
